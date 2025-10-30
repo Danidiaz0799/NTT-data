@@ -1,0 +1,37 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+  - job: Backend
+    displayName: 'Compilar y probar Backend (.NET)'
+    steps:
+      - task: UseDotNet@2
+        inputs:
+          packageType: 'sdk'
+          version: '8.x'
+      - script: |
+          cd backend
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet test --configuration Release --no-build
+        displayName: 'Compilar y ejecutar pruebas Backend'
+      - script: echo "Simulación de despliegue Backend en Azure App Service"
+        displayName: 'Desplegar Backend'
+
+  - job: Frontend
+    displayName: 'Compilar y probar Frontend (Angular)'
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '18.x'
+      - script: |
+          cd frontend
+          npm install
+          npm run build
+          npm run test -- --watch=false
+        displayName: 'Compilar y ejecutar pruebas Frontend'
+      - script: echo "Simulación de despliegue Frontend en Azure Static Web Apps"
+        displayName: 'Desplegar Frontend'

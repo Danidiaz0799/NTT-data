@@ -1,0 +1,18 @@
+# Backend build artifacts
+backend/bin/
+backend/obj/
+
+# Frontend build cache/outputs (mantener node_modules en tu máquina, solo ignorarlo en git)
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.vite/
+
+# OS/IDE
+.DS_Store
+.vscode/
+*.user
+*.suo
+*.log
+
+
