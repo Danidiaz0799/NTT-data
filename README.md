@@ -24,15 +24,11 @@ Solución Full Stack que incluye un Backend en ASP.NET Core Web API y un Fronten
 
 ### Backend (.NET)
 1. Ir a la carpeta `backend/`.
-2. Certificado de desarrollo HTTPS (una sola vez si no lo tienes):
-   ```bash
-   dotnet dev-certs https --trust
-   ```
-3. Ejecutar en HTTPS 8090 (perfil https ya apunta a 8090):
+2. Ejecutar en HTTPS 8090 (perfil https ya apunta a 8090):
    ```bash
    dotnet run
    ```
-4. La API quedará en:
+3. La API quedará en:
    - `https://localhost:8090/api/cliente`
 
 ### Frontend (Angular)
@@ -47,19 +43,44 @@ Solución Full Stack que incluye un Backend en ASP.NET Core Web API y un Fronten
    ```
 4. Acceder a `http://localhost:4200/consulta` en el navegador.
 
-## Pruebas Unitarias
-No incluidas en esta versión simplificada.
-
 ## Estructura del Repositorio
 ```
 backend/
   Controllers/
+    ClienteController.cs
+  Data/
+    AppDbContext.cs
   Models/
+    Cliente.cs
   Services/
+    IClienteService.cs
+    ClienteService.cs
+  Properties/
+    launchSettings.json
+  appsettings.json
+  appsettings.Development.json
   Program.cs
+
 frontend/
-  src/app/
-  ...
+  index.html
+  src/
+    main.ts
+    app/
+      app.component.ts
+      app.routes.ts
+      models/
+        cliente.model.ts
+      pages/
+        consulta/consulta.component.ts
+        resumen/resumen.component.ts
+      services/
+        cliente.service.ts
+  vite.config.ts
+  package.json
+  tsconfig.json
+  tsconfig.app.json
+
+.gitignore
 azure-pipelines.yml
 README.md
 ```
