@@ -4,11 +4,10 @@
 Solución Full Stack que incluye un Backend en ASP.NET Core Web API y un Frontend en Angular, diseñada para la consulta de información básica de clientes. El proyecto sigue principios SOLID, inyección de dependencias y buenas prácticas de arquitectura.
 
 ## Tecnologías Utilizadas
-- **Backend:** ASP.NET Core Web API (.NET 8)
-- **Frontend:** Angular (Standalone Components)
-- **Estilos:** Tailwind CSS
-- **Pruebas:** xUnit, Moq (Backend), Angular Testing (Frontend)
-- **DevOps:** Azure DevOps (CI/CD Pipeline simulado)
+- **Backend:** ASP.NET Core Web API (.NET 9)
+- **Frontend:** Angular (Standalone Components) + Vite
+- **Estilos:** Bootstrap 5 (CDN)
+- **DevOps:** Azure DevOps (CI/CD Pipeline de ejemplo)
 
 ## Funcionalidades Principales
 - **API REST mockeada:** Consulta de cliente por tipo y número de documento.
@@ -31,11 +30,10 @@ Solución Full Stack que incluye un Backend en ASP.NET Core Web API y un Fronten
    ```
 3. Ejecutar en HTTPS 8090 (perfil https ya apunta a 8090):
    ```bash
-   dotnet run -c Release --launch-profile https
+   dotnet run
    ```
 4. La API quedará en:
    - `https://localhost:8090/api/cliente`
-   - `http://localhost:5053/api/cliente`
 
 ### Frontend (Angular)
 1. Ir a la carpeta `frontend/`.
@@ -50,16 +48,7 @@ Solución Full Stack que incluye un Backend en ASP.NET Core Web API y un Fronten
 4. Acceder a `http://localhost:4200/consulta` en el navegador.
 
 ## Pruebas Unitarias
-- **Backend:**
-  ```bash
-  cd backend/Tests/ClienteApi.Tests
-  dotnet test
-  ```
-- **Frontend:**
-  ```bash
-  cd frontend
-  npm run test
-  ```
+No incluidas en esta versión simplificada.
 
 ## Estructura del Repositorio
 ```
@@ -67,7 +56,6 @@ backend/
   Controllers/
   Models/
   Services/
-  Tests/ClienteApi.Tests/
   Program.cs
 frontend/
   src/app/
