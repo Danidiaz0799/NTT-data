@@ -88,4 +88,27 @@ README.md
 ## Notas
 - El Backend solo retorna datos mockeados para el cliente 'C' y '23445322'.
 - El Frontend utiliza servicios y almacenamiento temporal para mostrar el resumen sin recargar la API.
-- El pipeline de Azure DevOps simula los pasos de compilación, pruebas y despliegue para ambos proyectos.
+
+## DevOps - Azure Pipelines
+
+### Pipeline CI/CD Configurado
+El archivo `azure-pipelines.yml` implementa:
+
+**Stage 1: Build**
+- Backend: restore, build, test, publish
+- Frontend: install, build, publish
+
+**Stage 2: Deploy**
+- Backend: Azure App Service
+- Frontend: Azure Static Web Apps
+
+**Configuración requerida:**
+- Service Connection: `Azure-Connection`
+- Variable: `AZURE_TOKEN`
+- Environment: `production`
+
+### Ejecutar Pruebas Localmente
+```bash
+cd backend/Tests/ClienteApi.Tests
+dotnet test
+```

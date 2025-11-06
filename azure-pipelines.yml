@@ -4,34 +4,77 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-jobs:
-  - job: Backend
-    displayName: 'Compilar y probar Backend (.NET)'
-    steps:
-      - task: UseDotNet@2
-        inputs:
-          packageType: 'sdk'
-          version: '8.x'
-      - script: |
-          cd backend
-          dotnet restore
-          dotnet build --configuration Release
-          dotnet test --configuration Release --no-build
-        displayName: 'Compilar y ejecutar pruebas Backend'
-      - script: echo "Simulación de despliegue Backend en Azure App Service"
-        displayName: 'Desplegar Backend'
+stages:
+  - stage: Build
+    jobs:
+      - job: Backend
+        displayName: 'Backend (.NET)'
+        steps:
+          - task: UseDotNet@2
+            inputs:
+              version: '9.x'
+          - task: DotNetCoreCLI@2
+            displayName: 'Restore'
+            inputs:
+              command: 'restore'
+              projects: 'backend/**/*.csproj'
+          - task: DotNetCoreCLI@2
+            displayName: 'Build'
+            inputs:
+              command: 'build'
+              projects: 'backend/**/*.csproj'
+              arguments: '--configuration Release'
+          - task: DotNetCoreCLI@2
+            displayName: 'Test'
+            inputs:
+              command: 'test'
+              projects: 'backend/Tests/**/*.csproj'
+          - task: DotNetCoreCLI@2
+            displayName: 'Publish'
+            inputs:
+              command: 'publish'
+              publishWebProjects: false
+              projects: 'backend/backend.csproj'
+              arguments: '--output $(Build.ArtifactStagingDirectory)'
+          - publish: $(Build.ArtifactStagingDirectory)
+            artifact: backend
 
-  - job: Frontend
-    displayName: 'Compilar y probar Frontend (Angular)'
-    steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: '18.x'
-      - script: |
-          cd frontend
-          npm install
-          npm run build
-          npm run test -- --watch=false
-        displayName: 'Compilar y ejecutar pruebas Frontend'
-      - script: echo "Simulación de despliegue Frontend en Azure Static Web Apps"
-        displayName: 'Desplegar Frontend'
+      - job: Frontend
+        displayName: 'Frontend (Angular)'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '20.x'
+          - script: cd frontend && npm ci && npm run build
+            displayName: 'Build Frontend'
+          - publish: frontend/dist
+            artifact: frontend
+
+  - stage: Deploy
+    dependsOn: Build
+    jobs:
+      - deployment: DeployBackend
+        displayName: 'Deploy Backend'
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: 'Azure-Connection'
+                    appName: 'ntt-cliente-api'
+                    package: '$(Pipeline.Workspace)/backend'
+      
+      - deployment: DeployFrontend
+        displayName: 'Deploy Frontend'
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureStaticWebApp@0
+                  inputs:
+                    app_location: '$(Pipeline.Workspace)/frontend'
+                    azure_static_web_apps_api_token: '$(AZURE_TOKEN)'
+

@@ -11,7 +11,6 @@
     "noPropertyAccessFromIndexSignature": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "noEmit": true,
     "types": ["node"]
   },
   "files": [
